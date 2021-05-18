@@ -8,7 +8,8 @@ public class BodySimulation : MonoBehaviour
 
     public void Awake()
     {
-        Time.fixedDeltaTime = Universe.physicsTimeStep;
+        //Time.fixedDeltaTime = Universe.physicsTimeStep;
+        Universe.physicsTimeStep = Time.deltaTime;
         bodies = FindObjectsOfType<CelestialBody>();
     }
 

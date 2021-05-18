@@ -12,10 +12,16 @@ public class CelestialBody : MonoBehaviour
 
     Rigidbody rb;
 
+    [ColorUsage(false, true)] public Color color;
+
     public void Awake()
     {
         currentVelocity = initialVelocity;
         rb = GetComponent<Rigidbody>();
+
+        var properties = new MaterialPropertyBlock();
+        properties.SetColor("_Color", color);
+        GetComponent<Renderer>().SetPropertyBlock(properties);
     }
 
     public void UpdateVelocity(CelestialBody[] allBodies, float timeStep)
@@ -25,8 +31,8 @@ public class CelestialBody : MonoBehaviour
             if (otherBody != this)
             {
                 float sqrDst = (otherBody.rb.position - rb.position).sqrMagnitude;
-                Vector3 forceDir = (otherBody.rb.position - rb.position).normalized;
-                Vector3 force = forceDir * Universe.gravitationalConstant * mass * otherBody.mass / sqrDst;
+                Vector3 forceDir = (otherBody.rb.position - rb.position) / Mathf.Sqrt(sqrDst);
+                Vector3 force = forceDir * Universe.GravitationalConstant * mass * otherBody.mass / sqrDst;
                 Vector3 acceleration = force / mass;
                 currentVelocity += acceleration * timeStep;
             }

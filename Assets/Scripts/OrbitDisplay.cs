@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class OrbitDisplay : MonoBehaviour
 {
+    public bool drawPreview;
+    public bool hidePreviewInPlayMode;
     [Range(1, 30000)]public int numSteps;
     public bool relativeToBody;
     public CelestialBody centralBody;
@@ -24,7 +26,12 @@ public class OrbitDisplay : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        if (!Application.isPlaying)
+        if (hidePreviewInPlayMode && Application.isPlaying)
+        {
+            return;
+        }
+
+        if (drawPreview)
         {
             DrawOrbits();
         }
@@ -118,7 +125,7 @@ public class OrbitDisplay : MonoBehaviour
             }
             Vector3 forceDir = (virtualBodies[j].position - virtualBodies[i].position).normalized;
             float sqrDst = (virtualBodies[j].position - virtualBodies[i].position).sqrMagnitude;
-            acceleration += forceDir * Universe.gravitationalConstant * virtualBodies[j].mass / sqrDst;
+            acceleration += forceDir * Universe.GravitationalConstant * virtualBodies[j].mass / sqrDst;
         }
         return acceleration;
     }
