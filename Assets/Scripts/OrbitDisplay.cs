@@ -91,24 +91,25 @@ public class OrbitDisplay : MonoBehaviour
         //Draw Orbits
         for (int bodyIndex = 0; bodyIndex < virtualBodies.Length; bodyIndex++)
         {
-            var pathColor = bodies[bodyIndex].GetComponent<MeshRenderer>().sharedMaterial.color;
+            //var pathColor = bodies[bodyIndex].GetComponent<MeshRenderer>().sharedMaterial.color;
 
             if (useThickLines)
             {
                 var lineRenderer = bodies[bodyIndex].gameObject.GetComponent<LineRenderer>();
                 lineRenderer.enabled = true;
                 lineRenderer.positionCount = drawPoints[bodyIndex].Length;
-                lineRenderer.sharedMaterial = bodies[bodyIndex].GetComponent<MeshRenderer>().sharedMaterial;
                 lineRenderer.SetPositions(drawPoints[bodyIndex]);
-                lineRenderer.startColor = pathColor;
-                lineRenderer.endColor = pathColor;
+                Color color = bodies[bodyIndex].color;
+                color.a = 1;
+                lineRenderer.startColor = color;
+                lineRenderer.endColor = color;
                 lineRenderer.widthMultiplier = width;
             }
             else
             {
                 for (int i = 0; i < drawPoints[bodyIndex].Length - 1; i++)
                 {
-                    Debug.DrawLine(drawPoints[bodyIndex][i], drawPoints[bodyIndex][i + 1], pathColor);
+                    //Debug.DrawLine(drawPoints[bodyIndex][i], drawPoints[bodyIndex][i + 1], pathColor);
                 }
             }
         }

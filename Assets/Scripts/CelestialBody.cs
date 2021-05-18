@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class CelestialBody : MonoBehaviour
 {
@@ -53,3 +56,19 @@ public class CelestialBody : MonoBehaviour
         GetComponent<Renderer>().SetPropertyBlock(properties);
     }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(CelestialBody))]
+public class CelestialBodyEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        if (GUILayout.Button("Set Preview Body"))
+        {
+            FindObjectOfType<OrbitDisplay>().centralBody = (CelestialBody)target;
+        }
+    }
+}
+#endif
