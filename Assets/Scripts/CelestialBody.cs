@@ -12,15 +12,17 @@ public class CelestialBody : MonoBehaviour
     //[HideInInspector]
     public Vector3 initialVelocity;
     Vector3 currentVelocity;
+    Vector3 force;
 
-    Rigidbody rb;
+    public new Rigidbody rigidbody;
 
     [ColorUsage(false, true)] public Color color;
 
     public void Awake()
     {
-        currentVelocity = initialVelocity;
-        rb = GetComponent<Rigidbody>();
+        //currentVelocity = initialVelocity;
+        rigidbody = GetComponent<Rigidbody>();
+        rigidbody.velocity = initialVelocity;
 
         var properties = new MaterialPropertyBlock();
         properties.SetColor("_Color", color);
@@ -29,27 +31,35 @@ public class CelestialBody : MonoBehaviour
 
     public void UpdateVelocity(CelestialBody[] allBodies, float timeStep)
     {
+        force = Vector3.zero;
+
         foreach (var otherBody in allBodies)
         {
             if (otherBody != this)
             {
-                float sqrDst = (otherBody.rb.position - rb.position).sqrMagnitude;
-                Vector3 forceDir = (otherBody.rb.position - rb.position) / Mathf.Sqrt(sqrDst);
-                Vector3 force = forceDir * Universe.GravitationalConstant * mass * otherBody.mass / sqrDst;
-                Vector3 acceleration = force / mass;
-                currentVelocity += acceleration * timeStep;
+                float sqrDst = (otherBody.rigidbody.position - rigidbody.position).sqrMagnitude;
+                Vector3 forceDir = (otherBody.rigidbody.position - rigidbody.position) / Mathf.Sqrt(sqrDst);
+                force += forceDir * Universe.GravitationalConstant * mass * otherBody.mass / sqrDst;
+                //Vector3 acceleration = force / mass;
+                //currentVelocity += acceleration * timeStep;
             }
         }
     }
 
     public void UpdatePosition(float timeStep)
     {
-        rb.position += currentVelocity * timeStep;
+        //rb.position += currentVelocity * timeStep;
+        rigidbody.AddForce(force);
     }
 
     public void OnValidate()
     {
         transform.localScale = new Vector3(radius, radius, radius);
+
+        if (rigidbody)
+        {
+            rigidbody.mass = mass;
+        }
 
         var properties = new MaterialPropertyBlock();
         properties.SetColor("_Color", color);
