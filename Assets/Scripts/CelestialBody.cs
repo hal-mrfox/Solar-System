@@ -47,5 +47,9 @@ public class CelestialBody : MonoBehaviour
     public void OnValidate()
     {
         transform.localScale = new Vector3(radius, radius, radius);
+
+        var properties = new MaterialPropertyBlock();
+        properties.SetColor("_Color", color);
+        GetComponent<Renderer>().SetPropertyBlock(properties);
     }
 }

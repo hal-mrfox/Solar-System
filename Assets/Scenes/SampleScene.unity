@@ -5850,7 +5850,7 @@ MonoBehaviour:
   mass: 4
   radius: 3
   initialVelocity: {x: 0, y: 100, z: 0}
-  color: {r: 0.05724907, g: 0, b: 1, a: 0}
+  color: {r: 0.20415704, g: 0.20185119, b: 0.2264151, a: 0}
 --- !u!120 &614776425
 LineRenderer:
   m_ObjectHideFlags: 0
