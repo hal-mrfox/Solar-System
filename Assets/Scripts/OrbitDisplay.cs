@@ -31,13 +31,23 @@ public class OrbitDisplay : MonoBehaviour
             return;
         }
 
+
         if (drawPreview)
         {
-            DrawOrbits();
+            var bodies = DrawOrbits();
+
+            for (int i = 0; i < bodies.Length; i++)
+            {
+                Vector3 direction = centralBody.transform.position - bodies[i].transform.position;
+                float distance = direction.magnitude;
+                direction /= distance;
+
+                Gizmos.DrawLine(bodies[i].transform.position, bodies[i].transform.position + direction * distance * 2f);
+            }
         }
     }
 
-    public void DrawOrbits()
+    public CelestialBody[] DrawOrbits()
     {
         CelestialBody[] bodies = FindObjectsOfType<CelestialBody>();
         var virtualBodies = new VirtualBody[bodies.Length];
@@ -113,6 +123,8 @@ public class OrbitDisplay : MonoBehaviour
                 }
             }
         }
+
+        return bodies;
     }
 
     Vector3 CalculateAcceleration(int i, VirtualBody[] virtualBodies)

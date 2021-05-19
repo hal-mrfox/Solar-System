@@ -14,6 +14,10 @@ public class CelestialBody : MonoBehaviour
     Vector3 currentVelocity;
     Vector3 force;
 
+    [Space(20)]
+    public float orbitalSpeed;
+    public CelestialBody otherBody;
+
     public new Rigidbody rigidbody;
 
     [ColorUsage(false, true)] public Color color;
@@ -27,6 +31,17 @@ public class CelestialBody : MonoBehaviour
         var properties = new MaterialPropertyBlock();
         properties.SetColor("_Color", color);
         GetComponent<Renderer>().SetPropertyBlock(properties);
+    }
+
+    public float CalculateOrbitalVelocity(CelestialBody body)
+    {
+        //float distance = Vector3.Distance(transform.position, body.transform.position);
+        //float period = Mathf.Sqrt(distance * distance * distance);
+        float standardGravitationalParamter = Universe.GravitationalConstant * mass;
+        float distance = Vector3.Distance(transform.position, body.transform.position);
+        float semiMajorAxis = Vector3.Distance(transform.position, body.transform.position);
+
+        return Mathf.Sqrt(standardGravitationalParamter * (2f / distance - 1f / semiMajorAxis));
     }
 
     public void UpdateVelocity(CelestialBody[] allBodies, float timeStep)
@@ -64,6 +79,11 @@ public class CelestialBody : MonoBehaviour
         var properties = new MaterialPropertyBlock();
         properties.SetColor("_Color", color);
         GetComponent<Renderer>().SetPropertyBlock(properties);
+
+        if (otherBody)
+        {
+            orbitalSpeed = CalculateOrbitalVelocity(otherBody);
+        }
     }
 }
 
